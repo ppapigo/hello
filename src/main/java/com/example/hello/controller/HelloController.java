@@ -1,6 +1,9 @@
 package com.example.hello.controller;
 
 import com.example.hello.dto.RequestLogin;
+import com.example.hello.dto.ResponseUser;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 /**
@@ -87,4 +90,22 @@ public class HelloController {
 
         return "FAILED";
     }
+
+    @GetMapping("/user/{id}") //localhost:8090/user/1
+    public ResponseEntity<ResponseUser> getUser(@PathVariable Long id){
+        //test로 id가 1이면 성공 아니면 실패
+        //성공하면 사용자 이름, 이메일을 반환
+        if(id==null || id <=0){
+            //client의 request가 잘못된 값일때 badRequest를 반환
+            return ResponseEntity.badRequest().build();
+        }
+
+        if(id==1){
+            ResponseUser user = new ResponseUser("1" , "홍길동", "test@example.com");
+            return ResponseEntity.status(HttpStatus.OK).body(user);
+        }
+        //404에러 <==id를 못찾은 경우
+        return ResponseEntity.notFound().build();
+    }
 }
+//curl -i -X POST "http://localhost:8090/login" -H "Content-type: application/json" -d "{\"id\":\"test@example.com\", \"password\":\"1234\"}"
