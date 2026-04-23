@@ -77,4 +77,28 @@ class HelloApplicationTests {
 				.andExpect(status().isOk())
 				.andExpect(content().string("OK"));
 	}
+
+	@Test
+	void testGetUserSuccess() throws Exception {
+		mockMvc.perform(get("/user/1"))
+				.andExpect(status().isOk())
+				.andExpect(content().contentType(MediaType.APPLICATION_JSON))
+				.andExpect(content().json("""
+                {
+                    "id": "1",
+                    "name": "홍길동",
+                    "email": "test@example.com"
+                }
+            """));
+	}
+	@Test
+	void testGetUserNotFound() throws Exception {
+		mockMvc.perform(get("/user/2"))
+				.andExpect(status().isNotFound());
+	}
+	@Test
+	void testGetUserBadRequest() throws Exception {
+		mockMvc.perform(get("/user/0"))
+				.andExpect(status().isBadRequest());
+	}
 }
